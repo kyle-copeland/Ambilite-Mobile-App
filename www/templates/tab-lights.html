@@ -1,9 +1,11 @@
 <ion-view view-title="Lights">
   <ion-content>
     <ion-list>
-      <ion-item class="item-avatar" ng-repeat="friend in friends" type="item-text-wrap" href="#/tab/friend/{{friend.id}}">
-        <img ng-src="{{friend.face}}">
-        <h2>{{friend.name}}</h2>
+      <ion-item class="item-avatar" ng-repeat="light in lights" type="item-text-wrap" href="#/tab/lights/{{light.id}}">
+        <ion-toggle>
+        <h2>{{light.name}}</h2>
+		<h3>Room: {{light.room}}</h3>
+		</ion-toggle>
       </ion-item>
     </ion-list>
   </ion-content>
