@@ -7,15 +7,18 @@ angular.module('starter.services', [])
   var lights = [{
     id: 0,
     name: 'Blue Lagoon',
-    room: 'Lanvi\'s Room'
+    roomID: 0,
+	power: false
   }, {
      id: 1,
     name: 'Red Lava Lamp',
-    room: 'Cats\'s Room'
+    roomID: 0,
+	power: true
   }, {
    id: 2,
     name: 'Green Lantern',
-    room: 'Deanna\'s Room'
+    roomID: 1,
+	power: false
   }];
 
   return {
@@ -34,6 +37,25 @@ angular.module('starter.services', [])
       return null;
     }
   }
+})
+.factory('Rooms', function() {
+	var rooms = [{
+		id:0,
+		name:"Lanvi's Room",
+		power: false
+	},
+	{
+		id:1,
+		name:"Deanna's Room",
+		power: true
+	}];
+
+	return {
+		all: function() {
+			return rooms;
+		}
+	}
+
 })
 
 /**
