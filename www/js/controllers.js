@@ -7,24 +7,21 @@ angular.module('starter.controllers', [])
 .controller('LightsCtrl', function($scope, Lights, Rooms, ClassPicker) {
   $scope.lights = Lights.all();
   $scope.rooms = Rooms.all();
-  console.log($scope.rooms);
-  for(var i = 0; i < $scope.rooms.length; ++i)
-  {
-	$scope.rooms[i].power = Lights.getRoomPower;
-	console.log($scope.rooms[i].power($scope.rooms[i].id));
-  }
+
   $scope.rooms.power = false; //variable control power of all rooms
-  $scope.switchRooms = function() { //turn on/off all rooms
+  $scope.toggleRooms = function() { //turn on/off all rooms
 	for(var i = 0; i < $scope.rooms.length; i++)
-		Lights.setRoomPower($scope.rooms[i].id,$scope.rooms.power); 
-	$scope.rooms.power = !$scope.rooms.power;
+		Rooms.setRoomPower($scope.rooms[i].id,$scope.rooms.power); 
+		$scope.rooms.power = !$scope.rooms.power;
   }
-  
   
   $scope.toggleRoom = function(index,roomID) {
-	Lights.setRoomPower(roomID,!$scope.rooms[index].power(roomID));
+	console.log(roomID,!Rooms.getRoomPower(roomID));
+	Rooms.setRoomPower(roomID,!Rooms.getRoomPower(roomID));
 	console.log(Lights.all());
   }
+  
+  $scope.getRoomPower = Rooms.getRoomPower;
   
   $scope.getToggleClass = function(roomID) {
 	//console.log("toggle-"+ClassPicker.getClass(roomID));
@@ -41,7 +38,6 @@ angular.module('starter.controllers', [])
 		$scope.room.power = !$scope.room.power;
 	}
   $scope.getToggleClass = function(roomID) {
-  console.log("toggle-"+ClassPicker.getClass(roomID));
 	return "toggle-"+ClassPicker.getClass(roomID);
   }
 })
