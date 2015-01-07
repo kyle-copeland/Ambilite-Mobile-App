@@ -57,7 +57,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       }
     })
-	.state('tab.lights.room', {
+	.state('tab.lights-room', {
+		url:'/lights/:roomID',
 		views: {
 			'tab-lights': {
 				templateUrl: 'templates/tab-lights-room.html',

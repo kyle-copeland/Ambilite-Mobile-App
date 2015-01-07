@@ -1,5 +1,21 @@
-<ion-view view-title="Room">
+<ion-view view-title="{{room.name}}">
+	<ion-nav-buttons side="right">
+	<button ng-click="toggleLights()" class="button">
+		{{room.power ? "On" : "Off"}} 
+	</button>
+	</ion-nav-buttons>
 	<ion-content>
-		BLAH!
+		<ion-list >
+			<li class="item item-toggle" ng-repeat="light in lights" >
+				<h2>{{light.name}}</h2>
+				<label class="toggle" ng-class="getToggleClass(room.id)">
+					<input type="checkbox" ng-model="light.power">
+					<div class="track">
+					<div class="handle">
+					</div>
+					</div>
+				</label>
+			</li>
+		</ion-list>
 	</ion-content>
 </ion-view>

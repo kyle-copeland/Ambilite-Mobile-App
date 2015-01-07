@@ -1,5 +1,5 @@
 angular.module('starter.services', [])
-
+//TO-DO Handle Rooms with no lights
 .factory('Lights', function() {
   // Might use a resource here that returns a JSON array
 
@@ -10,31 +10,61 @@ angular.module('starter.services', [])
     roomID: 0,
 	power: false
   }, {
-     id: 1,
+    id: 1,
     name: 'Red Lava Lamp',
     roomID: 0,
 	power: true
   }, {
-   id: 2,
+    id: 2,
     name: 'Green Lantern',
     roomID: 1,
 	power: false
+  }, {
+	id: 3,
+	name: 'Invader Zim',
+	roomID: 2,
+	power: true
   }];
 
   return {
     all: function() {
-      return lights;
+		return lights;
     },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
+    switchLight: function(lightID) {
+		for(var i = 0; i < lights.length; ++i)//for each light
+		{
+			if(lightID === lights[i].id)
+				lights[i].power = !lights[i].power;
+		}
     },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
-      }
-      return null;
+	setRoomPower: function(roomID,roomPower) {
+		for(var i = 0; i < lights.length; ++i)
+		{
+			if(lights[i].roomID === parseInt(roomID))
+				lights[i].power = roomPower;
+		}
+	},
+	getRoomPower:  function(roomID) {
+		var powerOn = false;
+		for(var i = 0; i < lights.length; ++i)
+		{
+			if(lights[i].roomID === parseInt(roomID) && lights[i].power)
+			{
+				powerOn = true;
+				return powerOn;
+			}
+		}
+		return powerOn;
+	
+	},
+    getRoom: function(roomID) {
+		var roomlights = [];
+		for (var i = 0; i < lights.length; i++) {
+			if (lights[i].roomID === parseInt(roomID)) {
+			  roomlights.push(lights[i]);
+			}
+		}
+		return roomlights;
     }
   }
 })
@@ -42,17 +72,34 @@ angular.module('starter.services', [])
 	var rooms = [{
 		id:0,
 		name:"Lanvi's Room",
-		power: false
 	},
 	{
 		id:1,
 		name:"Deanna's Room",
-		power: true
+	},
+	{
+		id:2,
+		name:"Cat's Room"
+	},
+	{
+		id:3,
+		name:"Kyle's Room"
+	},
+	{
+		id:4,
+		name:"Mark's Room"
 	}];
 
 	return {
 		all: function() {
 			return rooms;
+		},
+		get: function(roomID) {
+			for(var i = 0; i < rooms.length; i++)
+			{
+				if(rooms[i].id === parseInt(roomID))
+					return rooms[i];
+			}
 		}
 	}
 
@@ -83,4 +130,29 @@ angular.module('starter.services', [])
       return moods;
     }
   }
+})
+.factory('ClassPicker', function() {
+	return {
+		getClass: function(id) {
+			var index = parseInt(id) % 7 ;
+			console.log(id);
+			switch(index) {
+				case 0:
+					return "positive";
+				case 1:
+					return "calm";
+				case 2:
+					return "balanced";
+				case 3:
+					return "energized";
+				case 4:
+					return "assertive";
+				case 5:
+					return "royal";
+				case 6:
+					return "dark";	
+				}
+		}
+	}
+
 });
