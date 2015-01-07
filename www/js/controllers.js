@@ -33,9 +33,9 @@ angular.module('starter.controllers', [])
 	$scope.room = Rooms.get($stateParams.roomID);
 	$scope.room.power = false;
 	$scope.toggleLights = function() {
-	
-		Lights.setRoomPower($stateParams.roomID,$scope.room.power);
+		Rooms.setRoomPower($stateParams.roomID,$scope.room.power);
 		$scope.room.power = !$scope.room.power;
+		console.log($scope.room);
 	}
   $scope.getToggleClass = function(roomID) {
 	return "toggle-"+ClassPicker.getClass(roomID);
