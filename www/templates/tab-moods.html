@@ -1,8 +1,14 @@
-<ion-view view-title="Moods">
+<ion-view hide-back-button="true" view-title="Moods">
+  <ion-nav-buttons side="right">
+	<button ng-click="toggleShowDelete()" class="button button-icon icon ion-ios7-minus-outline"></button>
+	<button class="button" ui-sref="tab.moods-add">Add Mood</button>
+  </ion-nav-buttons>
   <ion-content>
-    <ion-list>
-      <ion-item class="item-avatar" ng-repeat="mood in moods" type="item-text-wrap" href="#/tab/moods/{{moods.id}}">
-        <h2>{{mood.name}}</h2>
+    <ion-list show-delete="showDelete" can-swipe="true">
+     <ion-item ng-repeat="mood in moods" href="#/tab/moods/{{moods.id}}">
+		<ion-delete-button ng-click="onMoodDelete(mood)" class="ion-minus-circled"></ion-delete-button>
+        {{mood.name}}
+		<ion-option-button class="button-assertive">Edit</ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>

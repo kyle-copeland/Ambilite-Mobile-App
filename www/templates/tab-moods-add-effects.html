@@ -1,0 +1,17 @@
+<ion-view view-title="Set Hue/Illumination">
+  <ion-nav-buttons side="right">
+  <a class="button" ui-sref="tab.moods">Save</a>
+  </ion-nav-buttons>
+  <ion-content>
+	<ion-list>
+		<ion-item ng-repeat-start="light in lights">
+			{{light.name}}
+		</ion-item>
+		<div class="item range" ng-class="getToggleClass(light.id)" ng-repeat-end>
+		<i class="icon ion-ios7-sunny"></i>
+		<input type="range" name="volume" min="0" max="100" value="33">
+		<i class="icon ion-ios7-sunny-outline"></i>
+		</div>
+	</ion-list>
+  </ion-content>
+</ion-view>

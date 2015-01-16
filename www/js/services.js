@@ -132,7 +132,10 @@ angular.module('starter.services', [])
   return {
     all: function() {
       return moods;
-    }
+    },
+	remove: function(mood) {
+		moods.splice(moods.indexOf(mood),1);
+	}
   }
 })
 .factory('ClassPicker', function() {

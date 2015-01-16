@@ -1,9 +1,28 @@
 angular.module('starter.controllers', [])
 
-.controller('MoodsCtrl', function($scope, Moods) {
+.controller('MoodsCtrl', function($scope, $ionicHistory, Moods) {
 	$scope.moods = Moods.all();
+	$scope.showDelete = false;
+	$scope.toggleShowDelete = function() {$scope.showDelete = !$scope.showDelete}
+	$scope.onMoodDelete = Moods.remove;
 })
-
+.controller('MoodsAddCtrl', function($scope) {
+	$scope.showTimeForm = false;
+	$scope.date = new Date();
+})
+.controller('MoodsAddLightsCtrl', function($scope,Lights,Rooms,ClassPicker) {
+	$scope.rooms = Rooms.all();
+	$scope.getRoom = Lights.getRoom;
+	$scope.getCheckboxClass = function(roomID) {
+	return "checkbox-"+ClassPicker.getClass(roomID);
+  }
+})
+.controller('MoodsAddEffectsCtrl', function($scope,Lights,ClassPicker) {
+	$scope.lights = Lights.all();
+	$scope.getToggleClass = function(roomID) {
+	return "range-"+ClassPicker.getClass(roomID);
+  }
+})
 .controller('LightsCtrl', function($scope, Lights, Rooms, ClassPicker) {
   $scope.lights = Lights.all();
   $scope.rooms = Rooms.all();
