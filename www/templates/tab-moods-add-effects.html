@@ -1,17 +1,25 @@
-<ion-view view-title="Set Hue/Illumination">
+<ion-view view-title="Set Hue/Brightness">
   <ion-nav-buttons side="right">
-  <a class="button" ui-sref="tab.moods">Save</a>
+  <button ng-show="mood == undefined" ng-click="saveMood()" class="button" ui-sref="tab.moods">Save</button>
+   <button ng-hide="mood == undefined" ng-click="saveMood()" class="button">Save</button>
   </ion-nav-buttons>
   <ion-content>
 	<ion-list>
 		<ion-item ng-repeat-start="light in lights">
-			{{light.name}}
+			Light name w/ id {{light.id}}
 		</ion-item>
-		<div class="item range" ng-class="getToggleClass(light.id)" ng-repeat-end>
+		<ion-item>
+			<p>Brightness</p>
+		</ion-item>
+		<div class="item range" ng-class="getToggleClass(light.id)" >
 		<i class="icon ion-ios7-sunny"></i>
-		<input type="range" name="volume" min="0" max="100" value="33">
+		<input type="range" ng-model="light.brightness" name="volume" min="0" max="100" value="33">
 		<i class="icon ion-ios7-sunny-outline"></i>
 		</div>
+		<ion-item>
+			<p>Color</p>
+		</ion-item>
+		<input placeholder="Tap to pick a color.." style="background-color: {{light.color}}" ng-repeat-end colorpicker ng-model="light.color" type="text">
 	</ion-list>
   </ion-content>
 </ion-view>

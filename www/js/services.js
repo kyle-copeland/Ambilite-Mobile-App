@@ -119,15 +119,31 @@ angular.module('starter.services', [])
   // Some fake testing data
   var moods = [{
     id: 0,
-    name: "Din din"
+    name: "Din din",
+	lights: [
+		{id:0},
+		{id:2}
+	
+	]
   }, {
     id: 1,
     name: 'Party Time',
+	lights: [
+		{id:0},
+		{id:4}
+	
+	]
   }, {
     id: 2,
     name: 'Afternoon Yoga',
+	lights: [
+		{id:0},
+		{id:1}
+	
+	]
   }];
 
+  var currMood = {};
 
   return {
     all: function() {
@@ -135,6 +151,49 @@ angular.module('starter.services', [])
     },
 	remove: function(mood) {
 		moods.splice(moods.indexOf(mood),1);
+	},
+	get: function(id) {
+		for(var i = 0; i < moods.length; i++)
+		{
+			if(moods[i].id === parseInt(id))
+			{	
+				currMood = moods[i];
+				return moods[i];
+			}	
+		}
+		return null;
+	},
+	createNew: function(moodName) {
+		var max = -1;
+		for(var i = 0; i < moods.length; i++)
+		{
+			if(moods[i].id > max)
+				max = moods[i].id;
+		}
+		currMood = {id:max+1,name: moodName};
+	},
+	setName: function(name,id) {
+		currMood.name = name;
+		for(var i = 0; i < moods.length; i++)
+		{
+			if(moods[i].id === parseInt(id))
+				moods[i].name = name;
+		}
+	},
+	setLights: function(lights,id) {
+		if(id === undefined)
+		{
+			currMood.lights = lights;
+		}
+		console.log(currMood);
+	},
+	getLights: function() {
+		return currMood.lights;
+	
+	},
+	save: function() {
+		moods.push(currMood);
+		currMood = {};
 	}
   }
 })

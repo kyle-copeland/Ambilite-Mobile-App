@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'angular-datepicker','starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'colorpicker.module','angular-datepicker','starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -47,8 +47,19 @@ angular.module('starter', ['ionic', 'angular-datepicker','starter.controllers', 
       }
     }
   })
+  .state('tab.moods-edit', {
+	url: '/moods/edit/:moodID',
+	views: {
+		'tab-moods': {
+			templateUrl : 'templates/tab-moods-edit.html',
+			controller: 'MoodsEditCtrl'
+		}
+	
+	}
+  
+  })
   .state('tab.moods-add', {
-	url: '/moods/add',
+	url: '/moods/add/:moodID',
 	views: {
 	  'tab-moods': {
 		templateUrl: 'templates/tab-moods-add.html',
@@ -59,7 +70,7 @@ angular.module('starter', ['ionic', 'angular-datepicker','starter.controllers', 
   
   })
   .state('tab.moods-add-lights', {
-	url: '/moods/add/lights',
+	url: '/moods/add/lights/:moodID',
 	views: {
 	  'tab-moods': {
 		templateUrl: 'templates/tab-moods-add-lights.html',
@@ -68,7 +79,7 @@ angular.module('starter', ['ionic', 'angular-datepicker','starter.controllers', 
 	}
   })
   .state('tab.moods-add-effects', {
-	url: '/moods/add/effects',
+	url: '/moods/add/effects/:moodID',
 	views: {
 	  'tab-moods': {
 		templateUrl: 'templates/tab-moods-add-effects.html',

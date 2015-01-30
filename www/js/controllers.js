@@ -6,19 +6,66 @@ angular.module('starter.controllers', [])
 	$scope.toggleShowDelete = function() {$scope.showDelete = !$scope.showDelete}
 	$scope.onMoodDelete = Moods.remove;
 })
-.controller('MoodsAddCtrl', function($scope) {
+.controller('MoodsEditCtrl', function($scope, $stateParams,Moods) {
+	$scope.mood = Moods.get($stateParams.moodID);
+
+})
+.controller('MoodsAddCtrl', function($scope,$stateParams,Moods) {
+	$scope.title = $stateParams.moodID === "" ? "Add Mood" : "Edit Mood";
+	$scope.mood = Moods.get($stateParams.moodID);
+	$scope.addMood = function() {
+		Moods.createNew(document.getElementById("mood-name").value);
+	}
+	$scope.saveMood = function() {
+		Moods.setName(document.getElementById("mood-name").value,$scope.mood.id);
+	}
 	$scope.showTimeForm = false;
 	$scope.date = new Date();
 })
-.controller('MoodsAddLightsCtrl', function($scope,Lights,Rooms,ClassPicker) {
+.controller('MoodsAddLightsCtrl', function($scope, $stateParams,Moods,Rooms,Lights,ClassPicker) {
 	$scope.rooms = Rooms.all();
 	$scope.getRoom = Lights.getRoom;
+	$scope.selected = {};
+	if($stateParams.moodID != "")
+	{
+		$scope.lights = Moods.get($stateParams.moodID).lights;
+		for(var i = 0; i < $scope.lights.length ;i++)
+		{
+			$scope.selected[$scope.lights[i].id] = true;
+		}
+	}
+	$scope.setLights = function() {
+		var lights = [];
+		for(id in $scope.selected)
+		{
+			if($scope.selected[id])
+				lights.push({id:id})
+		}
+		Moods.setLights(lights);
+	}
 	$scope.getCheckboxClass = function(roomID) {
 	return "checkbox-"+ClassPicker.getClass(roomID);
   }
 })
-.controller('MoodsAddEffectsCtrl', function($scope,Lights,ClassPicker) {
-	$scope.lights = Lights.all();
+.controller('MoodsAddEffectsCtrl', function($scope,$stateParams,Moods,Lights,ClassPicker) {
+	$scope.mood = Moods.get($stateParams.moodID);
+	console.log
+	if($scope.mood == null)
+	{
+		$scope.lights = Moods.getLights();
+		$scope.saveMood = Moods.save();
+	}
+	else
+	{
+		$scope.lights = $scope.mood.lights;
+		$scope.saveMood = function() {
+			Moods.setLights($scope.lights);
+			Moods.save();
+			console.log(Moods.get($stateParams.moodID));
+		}
+	}
+	
+	
 	$scope.getToggleClass = function(roomID) {
 	return "range-"+ClassPicker.getClass(roomID);
   }

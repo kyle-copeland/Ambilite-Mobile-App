@@ -1,12 +1,13 @@
-<ion-view view-title="Add Mood">
+<ion-view view-title="{{title}}">
   <ion-nav-buttons side="right">
-  <button class="button" ui-sref="tab.moods-add-lights">Select Lights</button>
+  <button class="button" ng-hide="title === 'Edit Mood'" ng-click="addMood()" ui-sref="tab.moods-add-lights">Select Lights</button>
+  <button class="button" ng-show="title === 'Edit Mood'" ng-click="saveMood()"> Save </button>
   </ion-nav-buttons>
   <ion-content>
 		<ion-list>
 		<div class="card">
 		<label class="item-input">
-		<input type="text" placeholder="Name...">
+			<input type="text" value="{{mood.name}}" id="mood-name" placeholder="Name...">
 		</label>
 		</div>
 		<div class="card">
