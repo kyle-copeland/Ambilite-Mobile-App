@@ -49,7 +49,7 @@ angular.module('starter.controllers', [])
 })
 .controller('MoodsAddEffectsCtrl', function($scope,$stateParams,Moods,Lights,ClassPicker) {
 	$scope.mood = Moods.get($stateParams.moodID);
-	console.log
+	
 	if($scope.mood == null)
 	{
 		$scope.lights = Moods.getLights();
@@ -58,6 +58,7 @@ angular.module('starter.controllers', [])
 	else
 	{
 		$scope.lights = $scope.mood.lights;
+		
 		$scope.saveMood = function() {
 			Moods.setLights($scope.lights);
 			Moods.save();
@@ -107,11 +108,18 @@ angular.module('starter.controllers', [])
 	return "toggle-"+ClassPicker.getClass(roomID);
   }
 })
-.controller('FriendsCtrl', function($scope, Friends) {
-  $scope.friends = Friends.all();
-})
-
-.controller('FriendDetailCtrl', function($scope, $stateParams, Friends) {
-  $scope.friend = Friends.get($stateParams.friendId);
+.controller('EditLightCtrl', function($scope) {
+	$scope.light = { 
+		id: 0,
+		power:true,
+		name:"Kyle is so cool",
+		brightness: 0,
+		color: {red:0,green:0,blue:0}
+	};
+	
+	$scope.saveLight = function() {
+		console.log("Light Saved");
+	}
 });
+
 

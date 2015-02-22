@@ -129,8 +129,8 @@ angular.module('starter.services', [])
     id: 1,
     name: 'Party Time',
 	lights: [
-		{id:0},
-		{id:4}
+		{id:0, color:{red:255,green:0,blue:0}},
+		{id:4, color:{red:255,green:0,blue:0}}
 	
 	]
   }, {

@@ -19,7 +19,8 @@
 		<ion-item>
 			<p>Color</p>
 		</ion-item>
-		<input placeholder="Tap to pick a color.." style="background-color: {{light.color}}" ng-repeat-end colorpicker ng-model="light.color" type="text">
+		{{light.color}}
+		<color-slider color="light.color" ng-repeat-end></color-slider>
 	</ion-list>
   </ion-content>
 </ion-view>

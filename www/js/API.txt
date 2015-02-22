@@ -1,0 +1,59 @@
+API for Light System
+GET
+/api/lights/all
+-Returns a JSON array of light objects {lights:[Light Objects]}
+
+/api/rooms/all
+-Returns a JSON array of room objects {rooms:[Room Objects]}
+
+/api/moods/all
+-Returns a JSON array of mood objects {moods:[Mood Objects]}
+/api/moods/:moodID
+-Param : Mood ID
+-Returns a single mood object {mood:{Mood Object}}
+
+POST
+/api/lights/switchPower/:lightID
+-Param: Light ID
+-Switchs power of a light
+
+/api/rooms/switchPower/:roomID
+-Param: Room ID
+-Switches power of a room
+
+/api/moods/save -- Sends a Mood JSON Object
+-Param: Mood Object
+-Updates a new mood or addes a new one if it does not exist
+**************Database/Object Schema**************
+Light Object
+{ 
+	"id": int,
+    "name": string,
+    "roomID": int,
+	"power": boolean,
+	"color": string(#RRGGBB)
+	"brightness": int 1 - 100
+}
+
+Room Object
+{
+	"id":int,
+	"name":string,
+	"lightIDs":[array of ints]
+}
+
+Mood Object
+{
+	"id":int,
+	"name":string,
+	"timeInterval": {
+		"startTime":time,
+		"endTime":time
+	},
+	"lights":[array of 
+			{
+				"id":int,
+				"color":string(#RRGGBB),
+				"brightness":int 1-100
+	}]
+}

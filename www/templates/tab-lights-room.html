@@ -7,7 +7,8 @@
 	<ion-content>
 		<ion-list >
 			<li class="item item-toggle" ng-repeat="light in lights" >
-				<h2>{{light.name}}</h2>
+				<a ui-sref="tab.lights-edit({lightID:light.id})"><h2>{{light.name}}</h2>
+				</a>
 				<label class="toggle" ng-class="getToggleClass(room.id)">
 					<input type="checkbox" ng-model="light.power">
 					<div class="track">
