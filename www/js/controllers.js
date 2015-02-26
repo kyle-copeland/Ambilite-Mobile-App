@@ -96,26 +96,29 @@ angular.module('starter.controllers', [])
   }
 })
 .controller('RoomCtrl', function($scope, Lights, Rooms,$stateParams,ClassPicker) {
-	$scope.lights = Lights.getRoom($stateParams.roomID);
-	$scope.room = Rooms.get($stateParams.roomID);
-	$scope.room.power = false;
+	Rooms.get($stateParams.roomID).success(function (lights) {
+		$scope.lights = lights.lights;
+	});
+	$scope.roomPower = false;
 	$scope.toggleLights = function() {
-		Rooms.setRoomPower($stateParams.roomID,$scope.room.power);
-		$scope.room.power = !$scope.room.power;
-		console.log($scope.room);
+		for(var i = 0; i < $scope.lights.length; i++)
+			$scope.lights[i].power = $scope.roomPower;
+		Rooms.setRoomPower($stateParams.roomID, $scope.roomPower);
+		$scope.roomPower = !$scope.roomPower;
 	}
+	
+	$scope.changePower = function(lightID) {
+		console.log(lightID);
+	};
   $scope.getToggleClass = function(roomID) {
 	return "toggle-"+ClassPicker.getClass(roomID);
   }
 })
-.controller('EditLightCtrl', function($scope) {
-	$scope.light = { 
-		id: 0,
-		power:true,
-		name:"Kyle is so cool",
-		brightness: 0,
-		color: {red:0,green:0,blue:0}
-	};
+.controller('EditLightCtrl', function(Lights,$scope,$stateParams) {
+	Lights.get($stateParams.lightID).success(function(light) {
+		$scope.light = light.light;
+		console.log($scope.light.name);
+	});
 	
 	$scope.saveLight = function() {
 		console.log("Light Saved");

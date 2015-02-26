@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 //TO-DO Handle Rooms with no lights
-.factory('Lights', function() {
+.factory('Lights',['$http', function($http) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -30,13 +30,10 @@ angular.module('starter.services', [])
     all: function() {
 		return lights;
     },
-    switchLight: function(lightID) {
-		for(var i = 0; i < lights.length; ++i)//for each light
-		{
-			if(lightID === lights[i].id)
-				lights[i].power = !lights[i].power;
-		}
-    },
+    get: function(lightID) {
+		console.log(lightID);
+		return $http.get('/api/getLight/' +lightID);
+	},
     getRoom: function(roomID) {
 		var roomlights = [];
 		for (var i = 0; i < lights.length; i++) {
@@ -47,8 +44,8 @@ angular.module('starter.services', [])
 		return roomlights;
     }
   }
-})
-.factory('Rooms', ['Lights',function(Lights) {
+}])
+.factory('Rooms', ['Lights','$http', function(Lights,$http) {
 	var rooms = [{
 		id:0,
 		name:"Lanvi's Room",
@@ -77,22 +74,11 @@ angular.module('starter.services', [])
 			return rooms;
 		},
 		get: function(roomID) {
-			for(var i = 0; i < rooms.length; i++)
-			{
-				if(rooms[i].id === parseInt(roomID))
-					return rooms[i];
-			}
+			return $http.get('api/getAllLights/'+roomID);
 		},
 		setRoomPower: function(roomID,roomPower) {
-			//console.log(roomID,roomPower);
-			for(var i = 0; i < lights.length; ++i)
-			{
-				if(lights[i].roomID === parseInt(roomID))
-				{
-					lights[i].power = roomPower;
-					console.log(lights[i].power);
-				}
-			}
+			console.log(roomID,roomPower);
+			$http.post("/api/rooms/switchPower/"+roomID, {power:roomPower});
 		},
 		getRoomPower:  function(roomID) {
 			var powerOn = false;

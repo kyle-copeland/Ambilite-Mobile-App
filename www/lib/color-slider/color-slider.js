@@ -37,6 +37,6 @@ angular.module('color-slider',[]).directive('colorSlider', function() {
 				}
 			}
 		},
-		templateUrl: 'templates/color-slider.html'
+		templateUrl: 'www/templates/color-slider.html'
 	};
 });

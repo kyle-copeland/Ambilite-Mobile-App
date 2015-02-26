@@ -27,7 +27,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
     .state('tab', {
     url: "/tab",
     abstract: true,
-    templateUrl: "templates/tabs.html"
+    templateUrl: "www/templates/tabs.html"
   })
 
   // Each tab has its own nav history stack:
@@ -36,7 +36,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
     url: '/moods',
     views: {
       'tab-moods': {
-        templateUrl: 'templates/tab-moods.html',
+        templateUrl: 'www/templates/tab-moods.html',
         controller: 'MoodsCtrl'
       }
     }
@@ -45,7 +45,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
 	url: '/moods/edit/:moodID',
 	views: {
 		'tab-moods': {
-			templateUrl : 'templates/tab-moods-edit.html',
+			templateUrl : 'www/templates/tab-moods-edit.html',
 			controller: 'MoodsEditCtrl'
 		}
 	
@@ -56,7 +56,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
 	url: '/moods/add/:moodID',
 	views: {
 	  'tab-moods': {
-		templateUrl: 'templates/tab-moods-add.html',
+		templateUrl: 'www/templates/tab-moods-add.html',
 		controller: 'MoodsAddCtrl'
 	  }
 	
@@ -67,7 +67,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
 	url: '/moods/add/lights/:moodID',
 	views: {
 	  'tab-moods': {
-		templateUrl: 'templates/tab-moods-add-lights.html',
+		templateUrl: 'www/templates/tab-moods-add-lights.html',
 		controller:'MoodsAddLightsCtrl'
 	  }
 	}
@@ -76,7 +76,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
 	url: '/moods/add/effects/:moodID',
 	views: {
 	  'tab-moods': {
-		templateUrl: 'templates/tab-moods-add-effects.html',
+		templateUrl: 'www/templates/tab-moods-add-effects.html',
 		controller:'MoodsAddEffectsCtrl'
 	  }
 	}
@@ -85,7 +85,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
       url: '/lights',
       views: {
         'tab-lights': {
-          templateUrl: 'templates/tab-lights.html',
+          templateUrl: 'www/templates/tab-lights.html',
           controller: 'LightsCtrl'
         }
       }
@@ -94,7 +94,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
 		url:'/lights/:roomID',
 		views: {
 			'tab-lights': {
-				templateUrl: 'templates/tab-lights-room.html',
+				templateUrl: 'www/templates/tab-lights-room.html',
 				controller: 'RoomCtrl'
 			}
 		}
@@ -103,7 +103,7 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
 		url:'/lights/:lightID',
 		views: {
 			'tab-lights': {
-				templateUrl: 'templates/tab-lights-edit.html',
+				templateUrl: 'www/templates/tab-lights-edit.html',
 				controller: 'EditLightCtrl'
 			}
 		}
