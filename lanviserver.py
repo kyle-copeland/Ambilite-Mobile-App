@@ -1,12 +1,12 @@
 from flask import Flask,jsonify,request
-import json
-import os
 import pymongo
+import serverToArduino
 from pymongo import MongoClient
 client = MongoClient('mongodb://copelandky:1llkillyou@ds045511.mongolab.com:45511/ambilite')
 db = client.ambilite
 
 app = Flask(__name__, static_folder='www')
+
 
 @app.route("/")
 def index():
@@ -66,7 +66,9 @@ def getAllRooms():
 @app.route("/api/saveLight/", methods = ['POST'])
 def postLight():
     L = request.get_json().get('light')
+    print L
     db.lights.update({'id': L['id']}, L, True)
+    sendLightInfo(L,['color','brightness','power'])
     return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
@@ -79,6 +81,8 @@ def postMood(moodID):
 @app.route("/api/rooms/switchPower/<roomID>", methods = ['POST'])
 def postPower(roomID):
     P = request.get_json().get('power')
+    print P
+    print roomID
     lightsInRoom = db.lights.find({"roomID": int(roomID)})
     for L in lightsInRoom:
         L['power'] = P
@@ -88,4 +92,5 @@ def postPower(roomID):
 if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
+    serverToArduino.arduinoInit()
     app.run()

@@ -72,20 +72,20 @@ angular.module('starter.controllers', [])
   }
 })
 .controller('LightsCtrl', function($scope, Lights, Rooms, ClassPicker) {
-  $scope.lights = Lights.all();
-  $scope.rooms = Rooms.all();
 
-  $scope.rooms.power = false; //variable control power of all rooms
+  Rooms.all().success(function (rooms) {
+	$scope.rooms = rooms.rooms;
+  });
+
+  $scope.power = false; //variable control power of all rooms
   $scope.toggleRooms = function() { //turn on/off all rooms
 	for(var i = 0; i < $scope.rooms.length; i++)
-		Rooms.setRoomPower($scope.rooms[i].id,$scope.rooms.power); 
-		$scope.rooms.power = !$scope.rooms.power;
+		Rooms.setRoomPower($scope.rooms[i].id,$scope.power); 
+		$scope.power = !$scope.power;
   }
   
   $scope.toggleRoom = function(index,roomID) {
-	console.log(roomID,!Rooms.getRoomPower(roomID));
-	Rooms.setRoomPower(roomID,!Rooms.getRoomPower(roomID));
-	console.log(Lights.all());
+	Rooms.setRoomPower(roomID,$scope.rooms[index].id,$scope.rooms[index].power);
   }
   
   $scope.getRoomPower = Rooms.getRoomPower;
@@ -117,11 +117,11 @@ angular.module('starter.controllers', [])
 .controller('EditLightCtrl', function(Lights,$scope,$stateParams) {
 	Lights.get($stateParams.lightID).success(function(light) {
 		$scope.light = light.light;
-		console.log($scope.light.name);
 	});
 	
+	
 	$scope.saveLight = function() {
-		console.log("Light Saved");
+		Lights.save($scope.light);
 	}
 });
 

@@ -3,75 +3,25 @@ angular.module('starter.services', [])
 .factory('Lights',['$http', function($http) {
   // Might use a resource here that returns a JSON array
 
-  // Some fake testing data
-  var lights = [{
-    id: 0,
-    name: 'Blue Lagoon',
-    roomID: 0,
-	power: false
-  }, {
-    id: 1,
-    name: 'Red Lava Lamp',
-    roomID: 0,
-	power: true
-  }, {
-    id: 2,
-    name: 'Green Lantern',
-    roomID: 1,
-	power: false
-  }, {
-	id: 3,
-	name: 'Invader Zim',
-	roomID: 2,
-	power: true
-  }];
-
   return {
     all: function() {
 		return lights;
     },
     get: function(lightID) {
-		console.log(lightID);
 		return $http.get('/api/getLight/' +lightID);
 	},
-    getRoom: function(roomID) {
-		var roomlights = [];
-		for (var i = 0; i < lights.length; i++) {
-			if (lights[i].roomID === parseInt(roomID)) {
-			  roomlights.push(lights[i]);
-			}
-		}
-		return roomlights;
-    }
+    save: function(light) {
+		console.log(light.brightness, parseInt(light.brightness));
+		light.brightness = parseInt(light.brightness);
+		$http.post('/api/saveLight/', {light:light});
+	}
   }
 }])
 .factory('Rooms', ['Lights','$http', function(Lights,$http) {
-	var rooms = [{
-		id:0,
-		name:"Lanvi's Room",
-		
-	},
-	{
-		id:1,
-		name:"Deanna's Room",
-	},
-	{
-		id:2,
-		name:"Cat's Room"
-	},
-	{
-		id:3,
-		name:"Kyle's Room"
-	},
-	{
-		id:4,
-		name:"Mark's Room"
-	}];
-	
-	var lights = Lights.all();
+
 	return {
 		all: function() {
-			return rooms;
+			return $http.get('api/getRooms/');
 		},
 		get: function(roomID) {
 			return $http.get('api/getAllLights/'+roomID);
