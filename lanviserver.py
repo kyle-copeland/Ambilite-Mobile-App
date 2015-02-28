@@ -63,10 +63,11 @@ def getAllRooms():
     return jsonify(rooms=roomSet)
 
 # Update ONE light's info
-@app.route("/api/saveLight/<lightID>", methods = ['POST'])
-def postLight(lightID):
-    L = request.form['light']
+@app.route("/api/saveLight/", methods = ['POST'])
+def postLight():
+    L = request.get_json().get('light')
     db.lights.update({'id': L['id']}, L, True)
+    return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
 @app.route("/api/saveMood/<moodID>", methods = ['POST'])
