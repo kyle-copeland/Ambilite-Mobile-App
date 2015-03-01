@@ -12,11 +12,12 @@ angular.module('color-slider',[]).directive('colorSlider', function() {
 			scope.lumScale = 50;
 			//From http://en.wikipedia.org/wiki/HSL_and_HSV
 			scope.calcRGB = function() {
-				console.log(scope.lumScale);
+				
 				var L = scope.lumScale/100;
 				var S = 1;
 				var C = (1-Math.abs(2*L -1))*S;
 				var H = scope.colorScale/60;
+				console.log(scope.lumScale,scope.colorScale);
 				var X = C*(1-Math.abs(H%2-1));
 				if(H == undefined){
 					scope.color.red = 0; scope.color.blue = 0; scope.color.green = 0;
@@ -44,7 +45,7 @@ angular.module('color-slider',[]).directive('colorSlider', function() {
 				scope.color.red = Math.round((scope.color.red + m)*255); 
 				scope.color.blue = Math.round((scope.color.blue + m)*255);
 				scope.color.green = Math.round((scope.color.green + m)*255);
-				
+				console.log(H);
 				
 				
 			}
@@ -70,11 +71,12 @@ angular.module('color-slider',[]).directive('colorSlider', function() {
 				else
 					h = 4 + ( r - g) / delta;	// between magenta & cyan
 				h *= 60;				// degrees
-				if( h < 0 )
+				console.log(h);
+				if( h < 1 )
 					h += 360;
 				scope.colorScale = Math.round(360-h);
 				scope.lumScale = 100*l;
-				console.log(h,scope.lumScale);
+				console.log(scope.colorScale,scope.lumScale);
 			
 			}
 			scope.getColor = function() {

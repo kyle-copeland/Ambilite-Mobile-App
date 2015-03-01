@@ -5,7 +5,7 @@ angular.module('starter.services', [])
 
   return {
     all: function() {
-		return lights;
+		return $http.get('api/getAllLights/-1');
     },
     get: function(lightID) {
 		return $http.get('/api/getLight/' +lightID);
@@ -48,7 +48,7 @@ angular.module('starter.services', [])
 /**
  * A simple example service that returns some data.
  */
-.factory('Moods', function() {
+.factory('Moods', ['$http','$q', function($http,$q) {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
@@ -79,25 +79,30 @@ angular.module('starter.services', [])
 	]
   }];
 
-  var currMood = {};
+  var currMood = {id:-1};
 
   return {
     all: function() {
-      return moods;
+      return $http.get('/api/getAllMoods/');
     },
 	remove: function(mood) {
 		moods.splice(moods.indexOf(mood),1);
 	},
 	get: function(id) {
-		for(var i = 0; i < moods.length; i++)
+		var deferred = $q.defer();
+		if(currMood.id === undefined || currMood.id !== parseInt(id))
 		{
-			if(moods[i].id === parseInt(id))
-			{	
-				currMood = moods[i];
-				return moods[i];
-			}	
+			$http.get('/api/getMood/'+id).success(function (mood) {
+				currMood = mood.mood;
+				console.log(currMood);
+				deferred.resolve(currMood);
+			});	
 		}
-		return null;
+		else
+		{
+			deferred.resolve(currMood);
+		}
+		return deferred.promise;
 	},
 	createNew: function(moodName) {
 		var max = -1;
@@ -132,7 +137,7 @@ angular.module('starter.services', [])
 		currMood = {};
 	}
   }
-})
+}])
 .factory('ClassPicker', function() {
 	return {
 		getClass: function(id) {

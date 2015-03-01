@@ -15,8 +15,8 @@ def index():
 # Populate all lights
 @app.route("/api/getAllLights/<roomID>")
 def getAllLights(roomID):
-    lightSet = []
-    lights = db.lights.find({"roomID": int(roomID)})
+    lightSet = [] 
+    lights = db.lights.find() if int(roomID) == -1 else db.lights.find({"roomID": int(roomID)})
     for L in lights:
         L.pop("_id")
         lightSet.append(L)

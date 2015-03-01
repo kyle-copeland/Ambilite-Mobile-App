@@ -5,10 +5,10 @@
   </ion-nav-buttons>
   <ion-content>
 	<ion-list>
-		<ion-item class="item-divider" ng-repeat-start="room in rooms">
-			{{room.name}}
+		<ion-item class="item-divider" ng-repeat-start="(roomID,v) in lights">
+			{{roomID}}
 		</ion-item>
-		<li class="item item-checkbox" ng-class="getCheckboxClass(light.id)" ng-repeat="light in getRoom(room.id)" ng-repeat-end>
+		<li class="item item-checkbox" ng-class="getCheckboxClass(light.id)" ng-repeat="light in lights[roomID]" ng-repeat-end>
 			<label class="checkbox">
 				<input ng-model="selected[light.id]" type="checkbox"/>
 			</label>
