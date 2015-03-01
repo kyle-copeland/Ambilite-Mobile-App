@@ -6,6 +6,27 @@
 #	3. send information for Deanna to use
 import serial
 import time
+import pymongo
+from pymongo import MongoClient
+#1. connect to database
+client = MongoClient('mongodb://copelandky:1llkillyou@ds045511.mongolab.com:45511/ambilite')
+db = client.ambilite
+
+#test function to get data from the database to send to a light
+def execute():
+        #2. grab random light from database
+
+        #id 0 - Purple, Full Brightness
+        #id 1 - Red, Half Brightness
+        #id 2 - Green, .7 Brightness
+        #id 3 - Yellow, .3 Brightness
+        # you may select an id between 0 - 3
+        id = 0
+        # get light
+        light = db.lights.find_one({"id":id})
+        print light['name']
+        #	3. send information for Deanna to use
+        sendLightInfo(light,['color','brightness','power'])
         
 #Write data to the Arduino
 def write(data):
@@ -46,9 +67,12 @@ def sendLightInfo(light,changes):
                 write(light['power'])
                 print 'field[power]: '+ str(light['power'])
 
-def arduinoInit():
-	# Open connection to the serial port connected to the Arduino
-	arduino = serial.Serial('COM7', 9600)
+if __name__ == "__main__":
+        # Open connection to the serial port connected to the Arduino
+        arduino = serial.Serial('COM7', 9600)
 
-	# Give time for the Arduino to reset
-	time.sleep(2)
+        # Give time for the Arduino to reset
+        time.sleep(2)
+
+        #send data to the controller
+        execute()

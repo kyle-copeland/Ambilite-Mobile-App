@@ -68,7 +68,7 @@ def postLight():
     L = request.get_json().get('light')
     print L
     db.lights.update({'id': L['id']}, L, True)
-    sendLightInfo(L,['color','brightness','power'])
+    #sendLightInfo(L,['color','brightness','power'])
     return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
@@ -92,5 +92,5 @@ def postPower(roomID):
 if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
-    serverToArduino.arduinoInit()
+    #serverToArduino.arduinoInit()
     app.run()

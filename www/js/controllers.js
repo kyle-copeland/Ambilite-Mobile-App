@@ -108,7 +108,7 @@ angular.module('starter.controllers', [])
 	}
 	
 	$scope.changePower = function(lightID) {
-		console.log(lightID);
+		Lights.save($scope.lights[lightID]);
 	};
   $scope.getToggleClass = function(roomID) {
 	return "toggle-"+ClassPicker.getClass(roomID);
