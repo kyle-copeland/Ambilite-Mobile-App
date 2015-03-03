@@ -5,7 +5,7 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list show-delete="showDelete" can-swipe="true">
-     <ion-item ng-repeat="mood in moods">
+     <ion-item ng-repeat="mood in moods" ng-click="activate(mood.id)">
 		<ion-delete-button ng-click="onMoodDelete($index,mood)" class="ion-minus-circled"></ion-delete-button>
         {{mood.name}} 
 		<ion-option-button ui-sref="tab.moods-edit({moodID:mood.id})" class="button-assertive">Edit</ion-option-button>

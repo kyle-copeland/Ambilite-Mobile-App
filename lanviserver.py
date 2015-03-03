@@ -79,6 +79,13 @@ def postMood():
     db.moods.update({'id': M['id']}, M, True)
     return jsonify(status='202 Accepted')
 	
+@app.route("/api/activateMood/<moodID>", methods = ['POST'])
+def activateMood(moodID):
+	mood = db.moods.find_one({'id':int(moodID)})
+	print mood
+	for light in mood['lights']:
+		print light
+	return jsonify(status='202 Accepted')
 @app.route("/api/removeMood/<moodID>", methods = ['POST'])
 def deleteMood(moodID):
 	print moodID

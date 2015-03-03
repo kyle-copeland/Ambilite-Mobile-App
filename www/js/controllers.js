@@ -13,6 +13,7 @@ angular.module('starter.controllers', [])
 			Moods.remove(mood);
 		}
 	}
+	$scope.activate = Moods.activate;
 })
 .controller('MoodsEditCtrl', function($scope, $stateParams,Moods) {
 	Moods.get($stateParams.moodID).then(function(mood) {

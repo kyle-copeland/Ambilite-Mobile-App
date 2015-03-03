@@ -111,6 +111,10 @@ angular.module('starter.services', [])
 		}
 		console.log(currMood);
 		$http.post("/api/saveMood/", {mood:currMood});
+	},
+	activate: function(moodID) {
+		console.log(moodID);
+		$http.post("/api/activateMood/"+moodID);
 	}
   }
 }])
