@@ -107,6 +107,7 @@ def postPower(roomID):
 if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
+	port = int(os.environ.get("PORT", 5000))
     #serverToArduino.arduinoInit()
-    app.run()
-    #app.run(host='0.0.0.0', port=5000, debug=True)
+    #app.run()
+    app.run(host='0.0.0.0', port=port)
