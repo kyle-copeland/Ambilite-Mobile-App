@@ -72,10 +72,18 @@ def postLight():
     return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
-@app.route("/api/saveMood/<moodID>", methods = ['POST'])
-def postMood(moodID):
-    M = request.form['mood']
+@app.route("/api/saveMood/", methods = ['POST'])
+def postMood():
+    M = request.get_json().get('mood')
+    print M
     db.moods.update({'id': M['id']}, M, True)
+    return jsonify(status='202 Accepted')
+	
+@app.route("/api/removeMood/<moodID>", methods = ['POST'])
+def deleteMood(moodID):
+	print moodID
+	db.moods.remove({'id':int(moodID)})
+	return jsonify(status='202 Accepted')
 
 # Update ONE room's power
 @app.route("/api/rooms/switchPower/<roomID>", methods = ['POST'])

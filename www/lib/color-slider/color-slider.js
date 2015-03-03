@@ -49,10 +49,16 @@ angular.module('color-slider',[]).directive('colorSlider', function() {
 				
 				
 			}
+			
 			scope.$watch('color', function(oldValue,newValue) {
+				console.log(oldValue,newValue);
 				if(oldValue !== undefined)
 				{
 					scope.initScales(oldValue);
+				}
+				else
+				{
+					//
 				}
 			});
 			//Taken from http://www.niwa.nu/2013/05/math-behind-colorspace-conversions-rgb-hsl/

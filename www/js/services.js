@@ -49,48 +49,36 @@ angular.module('starter.services', [])
  * A simple example service that returns some data.
  */
 .factory('Moods', ['$http','$q', function($http,$q) {
-  // Might use a resource here that returns a JSON array
-
-  // Some fake testing data
-  // Some fake testing data
-  var moods = [{
-    id: 0,
-    name: "Din din",
-	lights: [
-		{id:0},
-		{id:2}
-	
-	]
-  }, {
-    id: 1,
-    name: 'Party Time',
-	lights: [
-		{id:0, color:{red:255,green:0,blue:0}},
-		{id:4, color:{red:255,green:0,blue:0}}
-	
-	]
-  }, {
-    id: 2,
-    name: 'Afternoon Yoga',
-	lights: [
-		{id:0},
-		{id:1}
-	
-	]
-  }];
-
-  var currMood = {id:-1};
+  
+  var currMood = {id:null,lights:{}};
 
   return {
     all: function() {
       return $http.get('/api/getAllMoods/');
     },
 	remove: function(mood) {
-		moods.splice(moods.indexOf(mood),1);
+		$http.post("/api/removeMood/"+mood.id);
+	},
+	reset: function() {
+		console.log("RESET");
+		currMood = {id:null};
 	},
 	get: function(id) {
 		var deferred = $q.defer();
-		if(currMood.id === undefined || currMood.id !== parseInt(id))
+		if(currMood.id === null && id == "")
+		{
+			$http.get('/api/getAllMoods/').success(function(moods){
+				var maxID = -1;
+				for(var i = 0; i < moods.moods.length; i++)
+				{
+					maxID = Math.max(maxID,moods.moods[i].id);
+				}
+				currMood = {id:maxID+1,lights:{}};
+				console.log(currMood);
+				deferred.resolve(currMood);
+			});
+		}
+		else if(id != "" && currMood.id != parseInt(id))
 		{
 			$http.get('/api/getMood/'+id).success(function (mood) {
 				currMood = mood.mood;
@@ -104,37 +92,25 @@ angular.module('starter.services', [])
 		}
 		return deferred.promise;
 	},
-	createNew: function(moodName) {
-		var max = -1;
-		for(var i = 0; i < moods.length; i++)
-		{
-			if(moods[i].id > max)
-				max = moods[i].id;
-		}
-		currMood = {id:max+1,name: moodName};
-	},
 	setName: function(name,id) {
 		currMood.name = name;
-		for(var i = 0; i < moods.length; i++)
-		{
-			if(moods[i].id === parseInt(id))
-				moods[i].name = name;
-		}
-	},
-	setLights: function(lights,id) {
-		if(id === undefined)
-		{
-			currMood.lights = lights;
-		}
-		console.log(currMood);
-	},
-	getLights: function() {
-		return currMood.lights;
-	
 	},
 	save: function() {
-		moods.push(currMood);
-		currMood = {};
+		//remove lights that are off
+		console.log("SAVE",currMood.lights, currMood.lights.length);
+		for(light in currMood.lights)
+		{
+			console.log(light);
+			if(!currMood.lights[light].power)
+				delete currMood.lights[lights];
+		
+			if(currMood.lights[light].color == undefined)
+			{
+				currMood.lights[light].color = {red:255,green:0,blue:0};
+			}
+		}
+		console.log(currMood);
+		$http.post("/api/saveMood/", {mood:currMood});
 	}
   }
 }])
