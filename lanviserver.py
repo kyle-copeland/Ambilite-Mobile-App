@@ -83,9 +83,14 @@ def postMood():
 @app.route("/api/activateMood/<moodID>", methods = ['POST'])
 def activateMood(moodID):
 	mood = db.moods.find_one({'id':int(moodID)})
-	print mood
-	for light in mood['lights']:
-		print light
+	for id in mood['lights']:
+		##ADD THIS TO DEANNA'S THING
+		light = mood['lights'][id]
+		dbLight = db.lights.find_one({'id':int(id)})
+		dbLight['color'] = light['color']
+		dbLight['brightness'] = light['brightness']
+		dbLight['power'] = light['power']
+		db.lights.update({'id':int(id)},dbLight,True)
 	return jsonify(status='202 Accepted')
 @app.route("/api/removeMood/<moodID>", methods = ['POST'])
 def deleteMood(moodID):

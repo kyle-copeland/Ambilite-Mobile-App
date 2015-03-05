@@ -100,14 +100,17 @@ angular.module('starter.services', [])
 		console.log("SAVE",currMood.lights, currMood.lights.length);
 		for(light in currMood.lights)
 		{
-			console.log(light);
 			if(!currMood.lights[light].power)
 				delete currMood.lights[lights];
 		
 			if(currMood.lights[light].color == undefined)
 			{
 				currMood.lights[light].color = {red:255,green:0,blue:0};
+				currMood.lights[light].brightness = 50;
 			}
+			
+			if(currMood.lights[light].id == undefined)
+				currMood.lights[light].id = parseInt(light);
 		}
 		console.log(currMood);
 		$http.post("/api/saveMood/", {mood:currMood});
