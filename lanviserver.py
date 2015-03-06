@@ -112,12 +112,11 @@ def deleteMood(moodID):
 @app.route("/api/rooms/switchPower/<roomID>", methods = ['POST'])
 def postPower(roomID):
     P = request.get_json().get('power')
-    print P
-    print roomID
     lightsInRoom = db.lights.find({"roomID": int(roomID)})
     for L in lightsInRoom:
         L['power'] = P
         db.lights.update({'id': L['id']}, L, True)
+		#serverToArduino.sendLightInfo(L,['power'],arduino)
     return jsonify(status='202 Accepted')
 
 	
