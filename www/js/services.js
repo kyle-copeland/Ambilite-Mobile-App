@@ -1,3 +1,7 @@
+ function LightEffect(color,brightness) {
+		this.color = color || {red:255,green:0,blue:100};
+		this.brightness = brightness || 100;
+ }
 angular.module('starter.services', [])
 //TO-DO Handle Rooms with no lights
 .factory('Lights',['$http', function($http) {
@@ -11,7 +15,7 @@ angular.module('starter.services', [])
 		return $http.get('/api/getLight/' +lightID);
 	},
     save: function(light) {
-		console.log(light.brightness, parseInt(light.brightness));
+		console.log(light);
 		light.brightness = parseInt(light.brightness);
 		$http.post('/api/saveLight/', {light:light});
 	}
@@ -27,20 +31,7 @@ angular.module('starter.services', [])
 			return $http.get('api/getAllLights/'+roomID);
 		},
 		setRoomPower: function(roomID,roomPower) {
-			console.log(roomID,roomPower);
 			$http.post("/api/rooms/switchPower/"+roomID, {power:roomPower});
-		},
-		getRoomPower:  function(roomID) {
-			var powerOn = false;
-			for(var i = 0; i < lights.length; ++i)
-			{
-				if(lights[i].roomID === parseInt(roomID) && lights[i].power)
-				{
-					powerOn = true;
-					return powerOn;
-				}
-			}
-			return powerOn;
 		}
 	}
 }])
@@ -50,7 +41,7 @@ angular.module('starter.services', [])
  */
 .factory('Moods', ['$http','$q', function($http,$q) {
   
-  var currMood = {id:null,lights:{}};
+  var currMood = {id:null,lights:[new LightEffect()]};
 
   return {
     all: function() {
@@ -60,8 +51,7 @@ angular.module('starter.services', [])
 		$http.post("/api/removeMood/"+mood.id);
 	},
 	reset: function() {
-		console.log("RESET");
-		currMood = {id:null};
+		currMood = {id:null,lights:[new LightEffect()]};
 	},
 	get: function(id) {
 		var deferred = $q.defer();
@@ -73,8 +63,7 @@ angular.module('starter.services', [])
 				{
 					maxID = Math.max(maxID,moods.moods[i].id);
 				}
-				currMood = {id:maxID+1,lights:{}};
-				console.log(currMood);
+				currMood = {id:maxID+1,lights:[new LightEffect()]};
 				deferred.resolve(currMood);
 			});
 		}
@@ -82,7 +71,6 @@ angular.module('starter.services', [])
 		{
 			$http.get('/api/getMood/'+id).success(function (mood) {
 				currMood = mood.mood;
-				console.log(currMood);
 				deferred.resolve(currMood);
 			});	
 		}
@@ -96,28 +84,10 @@ angular.module('starter.services', [])
 		currMood.name = name;
 	},
 	save: function() {
-		//remove lights that are off
-		console.log("SAVE",currMood.lights, currMood.lights.length);
-		for(light in currMood.lights)
-		{
-			if(!currMood.lights[light].power)
-				delete currMood.lights[lights];
-		
-			if(currMood.lights[light].color == undefined)
-			{
-				currMood.lights[light].color = {red:255,green:0,blue:0};
-				currMood.lights[light].brightness = 50;
-			}
-			
-			if(currMood.lights[light].id == undefined)
-				currMood.lights[light].id = parseInt(light);
-		}
-		console.log(currMood);
 		$http.post("/api/saveMood/", {mood:currMood});
 	},
-	activate: function(moodID) {
-		console.log(moodID);
-		$http.post("/api/activateMood/"+moodID);
+	activate: function(roomID,moodID) {
+		$http.post("/api/activateMood/"+roomID+"/"+moodID);
 	}
   }
 }])

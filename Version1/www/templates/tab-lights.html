@@ -1,0 +1,23 @@
+<ion-view view-title="Rooms">
+	<ion-nav-buttons side="right">
+	<button ng-click="toggleRooms()" class="button">
+		All Rooms {{power ? "On" : "Off"}} 
+	</button>
+	</ion-nav-buttons>
+	<ion-content>
+		<ion-list>
+		<li class="item item-toggle" ng-repeat="room in rooms"  >
+			<a ui-sref="tab.lights-room({roomID:room.id})">
+			<h2>{{room.name}} {{room.roomID}}</h2>
+			</a>
+			<label class="toggle" ng-class="getToggleClass(room.id)">
+				<input type="checkbox" ng-click="toggleRoom($index,room.id)" ng-model="room.power">
+				<div class="track">
+				<div class="handle">
+				</div>
+				</div>
+			</label>
+		</li>
+		</ion-list>
+	</ion-content>
+</ion-view>

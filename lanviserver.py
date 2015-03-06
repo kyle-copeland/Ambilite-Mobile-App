@@ -50,26 +50,31 @@ def getMood(moodID):
 # Populate all Rooms based on power
 @app.route("/api/getRooms/")
 def getAllRooms():
-    roomSet = []
-    rooms = db.rooms.find()      
-    powerOn = db.lights.find({"power": True})
-    for R in rooms:
-        R['power'] = False
-        for P in powerOn:
-            if (R['id'] == P['roomID']):
-                R['power'] = True
-        R.pop("_id")
-        roomSet.append(R)
-    #print roomSet
-    return jsonify(rooms=roomSet)
+	roomSet = []
+	lightSet = []
+	rooms = db.rooms.find()     
+	
+	powerOn = db.lights.find({"power": True})
+	for L in powerOn:
+		lightSet.append(L)
+	for R in rooms:
+		R['power'] = False
+		for L in lightSet:
+			if (R['id'] == L['roomID']):
+				R['power'] = True
+		R.pop("_id")
+		roomSet.append(R)
+	return jsonify(rooms=roomSet)
 
 # Update ONE light's info
 @app.route("/api/saveLight/", methods = ['POST'])
 def postLight():
     L = request.get_json().get('light')
-    print L
+    oldL = db.lights.find_one({'id':L['id']})
+    changes = calcChanges(L,oldL)
+    print changes
     db.lights.update({'id': L['id']}, L, True)
-    #sendLightInfo(L,['color','brightness','power'])
+    #serverToArduino.sendLightInfo(L,changes)
     return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
@@ -80,21 +85,26 @@ def postMood():
     db.moods.update({'id': M['id']}, M, True)
     return jsonify(status='202 Accepted')
 	
-@app.route("/api/activateMood/<moodID>", methods = ['POST'])
-def activateMood(moodID):
-	mood = db.moods.find_one({'id':int(moodID)})
-	for id in mood['lights']:
-		##ADD THIS TO DEANNA'S THING
-		light = mood['lights'][id]
-		dbLight = db.lights.find_one({'id':int(id)})
-		dbLight['color'] = light['color']
-		dbLight['brightness'] = light['brightness']
-		dbLight['power'] = light['power']
-		db.lights.update({'id':int(id)},dbLight,True)
+@app.route("/api/activateMood/<roomID>/<moodID>", methods = ['POST'])
+def activateMood(roomID,moodID):
+	lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
+	mood = db.moods.find_one({'id':int(moodID)})['lights']
+	print mood
+	print lights.count()
+	for l in range(0,lights.count()):
+		moodLight = mood[l % len(mood)]
+		moodLight['power'] = True
+		temp = lights[l]
+		changes = calcChanges(moodLight,temp)
+		print changes
+		for change in changes:
+			temp[change] = moodLight[change]
+		db.lights.update({'id':temp['id']},temp,True)
+		#serverToArduino.sendLightInfo(temp,changes,arduino)
 	return jsonify(status='202 Accepted')
+
 @app.route("/api/removeMood/<moodID>", methods = ['POST'])
 def deleteMood(moodID):
-	print moodID
 	db.moods.remove({'id':int(moodID)})
 	return jsonify(status='202 Accepted')
 
@@ -110,10 +120,19 @@ def postPower(roomID):
         db.lights.update({'id': L['id']}, L, True)
     return jsonify(status='202 Accepted')
 
+	
+def calcChanges(old,new):
+	changes = ['color','brightness','power']
+	for change in ['color','brightness','power']:
+		if old[change] == new[change]:
+			changes.remove(change)
+	return changes
 if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
     port = int(os.environ.get("PORT", 5000))
-    #serverToArduino.arduinoInit()
+    #arduino = serverToArduino.arduinoInit()
     #app.run()
     app.run(host='0.0.0.0', port=port)
+	
+

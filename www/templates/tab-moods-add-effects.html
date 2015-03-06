@@ -5,21 +5,9 @@
   </ion-nav-buttons>
   <ion-content>
 	<ion-list>
-		<ion-item ng-repeat-start="light in lights">
-			Light name w/ id {{light.id}}
-		</ion-item>
-		<ion-item>
-			<p>Brightness</p>
-		</ion-item>
-		<div class="item range" ng-class="getToggleClass(light.id)" >
-		<i class="icon ion-ios7-sunny"></i>
-		<input type="range" ng-model="light.brightness" name="volume" min="0" max="100" value="33">
-		<i class="icon ion-ios7-sunny-outline"></i>
-		</div>
-		<ion-item>
-			<p>Color</p>
-		</ion-item>
-		<color-slider color="light.color" ng-repeat-end></color-slider>
+		<light light="light" ng-repeat-start="light in lights"></light>
+		<button ng-click="removeLightEffect($index)" class="button icon-right ion-minus button-full" ng-repeat-end>Remove Color</button>
+		<button ng-click="addLightEffect()" class="icon-right ion-plus button button-full">Add More Colors</button>
 	</ion-list>
   </ion-content>
 </ion-view>

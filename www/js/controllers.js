@@ -13,7 +13,16 @@ angular.module('starter.controllers', [])
 			Moods.remove(mood);
 		}
 	}
-	$scope.activate = Moods.activate;
+})
+.controller('MoodsSet', function($scope,$stateParams,Rooms,Moods) {
+	console.log($stateParams.moodID);
+	Rooms.all().success(function(rooms) {
+		$scope.rooms = rooms.rooms;
+	});
+	
+	$scope.activate = function(roomID) {
+		Moods.activate(roomID,$stateParams.moodID);
+	}
 })
 .controller('MoodsEditCtrl', function($scope, $stateParams,Moods) {
 	Moods.get($stateParams.moodID).then(function(mood) {
@@ -38,35 +47,24 @@ angular.module('starter.controllers', [])
 	$scope.showTimeForm = false;
 	$scope.date = new Date();
 })
-.controller('MoodsAddLightsCtrl', function($scope, $stateParams,Moods,Rooms,Lights,ClassPicker) {
-	$scope.moodID = $stateParams.moodID;
-	Lights.all().success(function(lights) {
-		Moods.get($stateParams.moodID).then(function(mood) {
-			$scope.mood = mood;
-			$scope.lights = _.groupBy(lights.lights,'roomID');
-		});
-	});
-	
-	$scope.setLights = function() {
-		Moods.save();
-	}
-	
-	$scope.getCheckboxClass = function(roomID) {
-		return "checkbox-"+ClassPicker.getClass(roomID);
-	};
-})
 .controller('MoodsAddEffectsCtrl', function($scope,$stateParams,Moods,Lights,ClassPicker) {
 	$scope.moodID = $stateParams.moodID;
 	Moods.get($stateParams.moodID).then (function (mood) {
 		$scope.mood = mood;
 		$scope.lights = $scope.mood.lights;
+	
 		
 	});
 	
 	$scope.saveMood = function() {
 		Moods.save();
 	}
-	
+	$scope.removeLightEffect = function(index) {
+		$scope.lights.splice(index,1);
+	}
+	$scope.addLightEffect = function() {
+		$scope.lights.push(new LightEffect(undefined,undefined,undefined));
+	}
 	$scope.getToggleClass = function(roomID) {
 	return "range-"+ClassPicker.getClass(roomID);
   }
@@ -80,12 +78,16 @@ angular.module('starter.controllers', [])
   $scope.power = false; //variable control power of all rooms
   $scope.toggleRooms = function() { //turn on/off all rooms
 	for(var i = 0; i < $scope.rooms.length; i++)
+	{
 		Rooms.setRoomPower($scope.rooms[i].id,$scope.power); 
-		$scope.power = !$scope.power;
+		$scope.rooms[i].power = $scope.power;
+		
+	}
+	$scope.power = !$scope.power;
   }
   
   $scope.toggleRoom = function(index,roomID) {
-	Rooms.setRoomPower(roomID,$scope.rooms[index].id,$scope.rooms[index].power);
+	Rooms.setRoomPower(roomID,$scope.rooms[index].power);
   }
   
   $scope.getRoomPower = Rooms.getRoomPower;
@@ -97,6 +99,7 @@ angular.module('starter.controllers', [])
 })
 .controller('RoomCtrl', function($scope, Lights, Rooms,$stateParams,ClassPicker) {
 	Rooms.get($stateParams.roomID).success(function (lights) {
+		console.log(lights);
 		$scope.lights = lights.lights;
 	});
 	$scope.roomPower = false;
@@ -108,6 +111,7 @@ angular.module('starter.controllers', [])
 	}
 	
 	$scope.changePower = function(lightID) {
+		console.log($scope.lights,lightID);
 		Lights.save($scope.lights[lightID]);
 	};
   $scope.getToggleClass = function(roomID) {

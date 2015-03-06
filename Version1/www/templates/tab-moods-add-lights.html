@@ -1,0 +1,20 @@
+<ion-view view-title="Select Lights">
+  <ion-nav-buttons side="right">
+  <button class="button" ng-hide="moodID != ''" ng-click="setLights()" ui-sref="tab.moods-add-effects">Select Hue/Brightness</button>
+  <button class="button" ng-show="moodID != ''" ng-click="setLights()">Save</button>
+  </ion-nav-buttons>
+  <ion-content>
+	<ion-list>
+		<ion-item class="item-divider" ng-repeat-start="(roomID,v) in lights">
+			{{roomID}}
+		</ion-item>
+		<li class="item item-checkbox" ng-class="getCheckboxClass(light.id)" ng-repeat="light in lights[roomID]" ng-repeat-end>
+			<label class="checkbox">
+				<input ng-model="mood.lights[light.id].power" type="checkbox"/>
+			</label>
+			{{light.name}}
+		</li>
+	</ion-list>
+		
+  </ion-content>
+</ion-view>

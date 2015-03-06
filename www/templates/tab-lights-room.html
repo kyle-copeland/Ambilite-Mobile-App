@@ -10,7 +10,7 @@
 				<a ui-sref="tab.lights-edit({lightID:light.id})"><h2>{{light.name}}</h2>
 				</a>
 				<label class="toggle" ng-class="getToggleClass(room.id)">
-					<input type="checkbox" ng-model="light.power" ng-change="changePower(light.id)" >
+					<input type="checkbox" ng-model="light.power" ng-change="changePower($index)" >
 					<div class="track">
 					<div class="handle">
 					</div>

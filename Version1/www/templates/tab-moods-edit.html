@@ -1,0 +1,21 @@
+<ion-view view-title="Edit Mood">
+<ion-header-bar align-title="left" class="bar-positive">
+  <div class="buttons">
+    <button class="button" ng-click="doSomething()">Left Button</button>
+  </div>
+  <h1 class="title">Title!</h1>
+  <div class="buttons">
+    <button class="button">Right Button</button>
+  </div>
+</ion-header-bar>
+  <ion-content>
+	<ion-list>
+		<ion-item>
+			<button class="button button-full button-calm" ui-sref="tab.moods-add({moodID:mood.id})">Edit Basic Information! </button>
+			<button class="button button-full button-energized" ui-sref="tab.moods-add-lights({moodID:mood.id})">Edit Lights Included</button>
+			<button class="button button-full button-royal" ui-sref="tab.moods-add-effects({moodID:mood.id})">Edit Color/Brightness</button>
+		</ion-item>
+	</ion-list>
+		
+  </ion-content>
+</ion-view>

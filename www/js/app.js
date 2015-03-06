@@ -1,5 +1,5 @@
 
-angular.module('starter', ['ionic','color-slider','starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic','color-slider','starter.controllers', 'starter.services','starter.directives'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -40,6 +40,15 @@ angular.module('starter', ['ionic','color-slider','starter.controllers', 'starte
         controller: 'MoodsCtrl'
       }
     }
+  })
+  .state('tab.moods-set', {
+		url:'/moods/set/:moodID',
+		views: {
+			'tab-moods': {
+				templateUrl: 'www/templates/tab-moods-set.html',
+				controller: 'MoodsSet'
+			}
+		}
   })
   .state('tab.moods-edit', {
 	url: '/moods/edit/:moodID',

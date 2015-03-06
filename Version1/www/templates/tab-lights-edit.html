@@ -1,0 +1,30 @@
+<ion-view view-title="{{light.name}}">
+	<ion-nav-buttons side="right">
+	<button ng-click="saveLight()" class="button">
+		Save
+	</button>
+	</ion-nav-buttons>
+	<ion-content>
+		<ion-item><h1>{{light.name}}</h1></ion-item>
+		<label class="toggle" ng-class="getToggleClass(room.id)">
+					<input type="checkbox" ng-model="light.power">
+					<div class="track">
+					<div class="handle">
+					</div>
+					</div>
+		</label>
+		<ion-item>
+			<p>Brightness</p>
+		</ion-item>
+		<div class="item range" ng-class="getToggleClass(light.id)" >
+		<i class="icon ion-ios7-sunny"></i>
+		<input type="range" ng-model="light.brightness" name="volume" min="0" max="100" value="33">
+		<i class="icon ion-ios7-sunny-outline"></i>
+		</div>
+		<ion-item>
+			<p>Color</p>
+		</ion-item>
+		<div style="width:50px;height:50px" ng-style="getColor()"></div>
+		<color-slider color="light.color"></color-slider>
+	</ion-content>
+</ion-view>

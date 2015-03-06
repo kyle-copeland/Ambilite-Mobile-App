@@ -1,0 +1,21 @@
+<ion-view view-title="{{title}}">
+  <ion-nav-buttons side="right">
+  <button class="button" ng-hide="title === 'Edit Mood'" ng-click="saveMood()" ui-sref="tab.moods-add-lights">Select Lights</button>
+  <button class="button" ng-show="title === 'Edit Mood'" ng-click="saveMood()"> Save </button>
+  </ion-nav-buttons>
+  <ion-content>
+		<ion-list>
+		<div class="card">
+		<label class="item-input">
+			<input type="text" value="{{mood.name}}" id="mood-name" placeholder="Name...">
+		</label>
+		</div>
+		<div class="card">
+		<ion-toggle ng-model="showTimeForm">Time Interval</ion-toggle>
+		<div  ng-show="showTimeForm">
+			Start Time:
+			End Time:
+		</div>
+		</ion-list>
+  </ion-content>
+</ion-view>

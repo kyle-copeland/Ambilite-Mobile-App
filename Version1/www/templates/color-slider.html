@@ -1,0 +1,3 @@
+<div style="height:50px" ng-style="getColor()"></div>
+<input class="color-slider" ng-model="colorScale" ng-change="calcRGB()" min=0 max=359 type="range"/>
+<input style="width:100%" ng-model="lumScale" ng-style="getHue()" ng-change="calcRGB()" min=0 max=100 type="range"/>

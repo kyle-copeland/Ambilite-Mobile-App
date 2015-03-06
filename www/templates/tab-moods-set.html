@@ -1,0 +1,8 @@
+<ion-view view-title="Choose Mood Context">
+<ion-header-bar align-title="left" class="bar-positive">
+</ion-header-bar>
+  <ion-content>
+	<ion-item class="item-icon-left" ng-click="activate(-1)" ui-sref="tab.moods"><i class="icon ion-home"></i>House</ion-item>
+	<ion-item ng-repeat="room in rooms" ng-click="activate(room.id)" ui-sref="tab.moods">{{room.name}}</ion-item>
+  </ion-content>
+</ion-view>

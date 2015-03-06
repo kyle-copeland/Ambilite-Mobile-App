@@ -1,0 +1,25 @@
+<ion-view view-title="Set Hue/Brightness">
+  <ion-nav-buttons side="right">
+  <button ng-show="moodID == ''" ng-click="saveMood()" class="button" ui-sref="tab.moods">Save</button>
+   <button ng-hide="moodID == ''" ng-click="saveMood()" class="button">Save</button>
+  </ion-nav-buttons>
+  <ion-content>
+	<ion-list>
+		<ion-item ng-repeat-start="light in lights">
+			Light name w/ id {{light.id}}
+		</ion-item>
+		<ion-item>
+			<p>Brightness</p>
+		</ion-item>
+		<div class="item range" ng-class="getToggleClass(light.id)" >
+		<i class="icon ion-ios7-sunny"></i>
+		<input type="range" ng-model="light.brightness" name="volume" min="0" max="100" value="33">
+		<i class="icon ion-ios7-sunny-outline"></i>
+		</div>
+		<ion-item>
+			<p>Color</p>
+		</ion-item>
+		<color-slider color="light.color" ng-repeat-end></color-slider>
+	</ion-list>
+  </ion-content>
+</ion-view>
