@@ -2,6 +2,12 @@
 		this.color = color || {red:255,green:0,blue:100};
 		this.brightness = brightness || 100;
  }
+ 
+ function Time() {
+	this.timeSet = false;
+	this.hour = 0;
+	this.minute = 0;
+ }
 angular.module('starter.services', [])
 //TO-DO Handle Rooms with no lights
 .factory('Lights',['$http', function($http) {
@@ -41,29 +47,45 @@ angular.module('starter.services', [])
  */
 .factory('Moods', ['$http','$q', function($http,$q) {
   
-  var currMood = {id:null,lights:[new LightEffect()]};
-
+  var currMood = {id:null,time:new Time(),lights:[new LightEffect()]};
+  var moods;
   return {
     all: function() {
-      return $http.get('/api/getAllMoods/');
+		var deferred = $q.defer();
+		if(moods === undefined)
+		{
+			$http.get('/api/getAllMoods/').success(function(data) {
+				moods = data.moods;
+				deferred.resolve(moods);
+			});
+			
+		}
+		else
+		{
+			deferred.resolve(moods);
+		}
+      return deferred.promise;
     },
 	remove: function(mood) {
 		$http.post("/api/removeMood/"+mood.id);
 	},
 	reset: function() {
-		currMood = {id:null,lights:[new LightEffect()]};
+		console.log("RESET");
+		currMood = {id:null,time:new Time(),lights:[new LightEffect()]};
 	},
 	get: function(id) {
 		var deferred = $q.defer();
+		console.log("GET");
 		if(currMood.id === null && id == "")
 		{
+			console.log("RESET GET");
 			$http.get('/api/getAllMoods/').success(function(moods){
 				var maxID = -1;
 				for(var i = 0; i < moods.moods.length; i++)
 				{
 					maxID = Math.max(maxID,moods.moods[i].id);
 				}
-				currMood = {id:maxID+1,lights:[new LightEffect()]};
+				currMood = {id:maxID+1,time:new Time(),lights:[new LightEffect()]};
 				deferred.resolve(currMood);
 			});
 		}
@@ -85,6 +107,14 @@ angular.module('starter.services', [])
 	},
 	save: function() {
 		$http.post("/api/saveMood/", {mood:currMood});
+		var exists = false;
+		for(var i =0; i < moods.length; i++)
+		{
+			if(moods[i].id == currMood.id)
+				exists = true;
+		}
+		if(!exists)
+			moods.push(currMood);
 	},
 	activate: function(roomID,moodID) {
 		$http.post("/api/activateMood/"+roomID+"/"+moodID);

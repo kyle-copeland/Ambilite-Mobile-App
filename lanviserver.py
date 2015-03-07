@@ -74,7 +74,7 @@ def postLight():
     changes = calcChanges(L,oldL)
     print changes
     db.lights.update({'id': L['id']}, L, True)
-    #serverToArduino.sendLightInfo(L,changes)
+    #serverToArduino.sendRoomInfo([{"light":L,"changes":changes}],arduino[L['roomID']])
     return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
@@ -89,18 +89,18 @@ def postMood():
 def activateMood(roomID,moodID):
 	lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
 	mood = db.moods.find_one({'id':int(moodID)})['lights']
-	print mood
-	print lights.count()
+	rooms = [[],[]]
 	for l in range(0,lights.count()):
 		moodLight = mood[l % len(mood)]
 		moodLight['power'] = True
+		moodLight['brightness'] = int(moodLight['brightness'])
 		temp = lights[l]
 		changes = calcChanges(moodLight,temp)
 		print changes
 		for change in changes:
 			temp[change] = moodLight[change]
 		db.lights.update({'id':temp['id']},temp,True)
-		#serverToArduino.sendLightInfo(temp,changes,arduino)
+		#serverToArduino.sendRoomInfo(temp,changes,arduino)
 	return jsonify(status='202 Accepted')
 
 @app.route("/api/removeMood/<moodID>", methods = ['POST'])
@@ -113,10 +113,15 @@ def deleteMood(moodID):
 def postPower(roomID):
     P = request.get_json().get('power')
     lightsInRoom = db.lights.find({"roomID": int(roomID)})
+    rooms = [[],[]]
+	
     for L in lightsInRoom:
         L['power'] = P
         db.lights.update({'id': L['id']}, L, True)
-		#serverToArduino.sendLightInfo(L,['power'],arduino)
+	    #rooms[L['roomID']].append({"light":L,"changes":['power']})
+	#for id in rooms:
+#print id
+		#serverToArduino.sendRoomInfo(rooms[id],arduino[id])
     return jsonify(status='202 Accepted')
 
 	
@@ -126,10 +131,20 @@ def calcChanges(old,new):
 		if old[change] == new[change]:
 			changes.remove(change)
 	return changes
+	
+def initLights():
+	lights = db.lights.find()
+	rooms = [[],[]]
+	for L in lights:
+		rooms[L['roomID']].append({"light":L,"changes":['color','brightness','power']})
+	#for room in rooms:
+		#serverToArduino.sendRoomInfo(rooms)
+		#serverToArduino.sendLightInfo(L,['color','brightness','power'],arduino)
 if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
     port = int(os.environ.get("PORT", 5000))
+    initLights()
     #arduino = serverToArduino.arduinoInit()
     #app.run()
     app.run(host='0.0.0.0', port=port)

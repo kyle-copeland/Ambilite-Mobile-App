@@ -11,10 +11,10 @@
 		</label>
 		</div>
 		<div class="card">
-		<ion-toggle ng-model="showTimeForm">Time Interval</ion-toggle>
-		<div  ng-show="showTimeForm">
-			Start Time:
-			End Time:
+		<ion-toggle ng-model="mood.time.timeSet">Time Interval</ion-toggle>
+		<div  ng-show="mood.time.timeSet">
+			<time-picker time="mood.time"></time-picker>
+			
 		</div>
 		</ion-list>
   </ion-content>

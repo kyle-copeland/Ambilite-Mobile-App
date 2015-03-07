@@ -40,6 +40,8 @@ def write(data):
 #Params
 #light -> light dictionary with all information about a light 
 #changes -> array of strings of which fields to change i.e ['color','power']
+def writeNumberOfLights(num):
+	write(num,)
 def sendLightInfo(light,changes):
         print light['id']
         write(light['id'])

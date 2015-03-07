@@ -1,0 +1,16 @@
+<label class="item item-input item-select">
+	<div class="input-label">
+		Hour
+	</div>
+	<select ng-model="time.hour">
+		<option ng-repeat="i in getRange(24) track by $index">{{$index}}</option>
+	</select>
+</label>
+<label class="item item-input item-select">
+	<div class="input-label">
+		Minute
+	</div>
+	<select ng-model="time.minute">
+		<option ng-repeat="i in getRange(60) track by $index">{{$index}}</option>
+	</select>
+</label>

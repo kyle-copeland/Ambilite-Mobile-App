@@ -1,8 +1,8 @@
 angular.module('starter.controllers', [])
 
-.controller('MoodsCtrl', function($scope, $ionicHistory, Moods) {
-	Moods.all().success(function (moods) {
-		$scope.moods = moods.moods;
+.controller('MoodsCtrl', function($scope, $state,$ionicHistory, Moods) {
+	Moods.all().then(function (moods) {
+		$scope.moods = moods;
 	});
 	$scope.showDelete = false;
 	$scope.toggleShowDelete = function() {$scope.showDelete = !$scope.showDelete}
@@ -30,17 +30,19 @@ angular.module('starter.controllers', [])
 	});
 	
 })
-.controller('MoodsAddCtrl', function($scope,$stateParams,Moods) {
+.controller('MoodsAddCtrl', function($scope,$state,$stateParams,Moods) {
 	$scope.title = $stateParams.moodID === "" ? "Add Mood" : "Edit Mood";
+
 	if($stateParams.moodID === '')
 		Moods.reset();
+		
 	Moods.get($stateParams.moodID).then(function(mood) {
 		$scope.mood= mood;
 		console.log($scope.mood);
 	});
 	
+	
 	$scope.saveMood = function() {
-		console.log("ASD");
 		Moods.setName(document.getElementById("mood-name").value,$scope.mood.id);
 		Moods.save();
 	}

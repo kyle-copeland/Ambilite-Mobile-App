@@ -1,6 +1,6 @@
 <ion-view view-title="Set Hue/Brightness">
   <ion-nav-buttons side="right">
-  <button ng-show="moodID == ''" ng-click="saveMood()" class="button" ui-sref="tab.moods">Save</button>
+  <button ng-show="moodID == ''" ng-click="saveMood()" class="button" ui-sref="tab.moods" ui-sref-opts="{ reload: true }">Save</button>
    <button ng-hide="moodID == ''" ng-click="saveMood()" class="button">Save</button>
   </ion-nav-buttons>
   <ion-content>
