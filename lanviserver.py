@@ -2,12 +2,13 @@ from flask import Flask,jsonify,request
 import pymongo
 import os
 import serverToArduino
+import datetime
+import threading
 from pymongo import MongoClient
 client = MongoClient('mongodb://copelandky:1llkillyou@ds045511.mongolab.com:45511/ambilite')
 db = client.ambilite
 
 app = Flask(__name__, static_folder='www')
-
 
 @app.route("/")
 def index():
@@ -140,6 +141,33 @@ def initLights():
 	#for room in rooms:
 		#serverToArduino.sendRoomInfo(rooms)
 		#serverToArduino.sendLightInfo(L,['color','brightness','power'],arduino)
+
+def checkTime():
+    now = datetime.datetime.now()
+    moods = db.moods.find({"time.timeSet": True})
+    for m in moods:
+        hr = int(m['time']['hour'])
+        mint = int(m['time']['minute'])     
+        if hr == now.hour and mint == now.minute:
+            roomID = m['time']['roomID']
+            moodID = m['id']
+            lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
+            mood = db.moods.find_one({'id':int(moodID)})['lights']
+            rooms = [[],[]]
+            for l in range(0,lights.count()):
+                moodLight = mood[l % len(mood)]
+                moodLight['power'] = True
+                moodLight['brightness'] = int(moodLight['brightness'])
+                temp = lights[l]
+                changes = calcChanges(moodLight,temp)
+                print changes
+                for change in changes:
+                    temp[change] = moodLight[change]
+                db.lights.update({'id':temp['id']},temp,True)
+                #serverToArduino.sendRoomInfo(temp,changes,arduino)
+    threading.Timer(5.0, checkTime).start()
+
+
 if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
@@ -147,6 +175,7 @@ if __name__ == "__main__":
     initLights()
     #arduino = serverToArduino.arduinoInit()
     #app.run()
+    checkTime()
     app.run(host='0.0.0.0', port=port)
 	
 
