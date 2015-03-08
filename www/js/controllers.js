@@ -30,15 +30,21 @@ angular.module('starter.controllers', [])
 	});
 	
 })
-.controller('MoodsAddCtrl', function($scope,$state,$stateParams,Moods) {
+.controller('MoodsAddCtrl', function($scope,$state,$stateParams,Moods,Rooms) {
 	$scope.title = $stateParams.moodID === "" ? "Add Mood" : "Edit Mood";
 
 	if($stateParams.moodID === '')
 		Moods.reset();
-		
+	
+	$scope.setRoomID = function(roomID) {
+		$scope.mood.time.roomID = roomID;
+	}
+	Rooms.all().success(function(rooms) {
+		$scope.rooms = rooms.rooms;
+		console.log($scope.rooms);
+	});
 	Moods.get($stateParams.moodID).then(function(mood) {
 		$scope.mood= mood;
-		console.log($scope.mood);
 	});
 	
 	

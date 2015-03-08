@@ -14,8 +14,17 @@
 		<ion-toggle ng-model="mood.time.timeSet">Time Interval</ion-toggle>
 		<div  ng-show="mood.time.timeSet">
 			<time-picker time="mood.time"></time-picker>
-			
 		</div>
+		</div>
+		<div class="card" ng-show="mood.time.timeSet">
+			<ion-list>
+			<ion-item> Choose Room Context:</ion-item>
+			<ion-item class="item-icon-left" ng-class="{'item-positive':mood.time.roomID == -1}" ng-click="setRoomID(-1)"><i class="icon ion-home"></i>House</ion-item>
+			<ion-item ng-class="{'item-positive':mood.time.roomID == room.id}" ng-click="setRoomID(room.id)" ng-repeat="room in rooms">
+				{{room.name}}
+			</ion-item>
+			</ion-list>
+		</div>	
 		</ion-list>
   </ion-content>
 </ion-view>

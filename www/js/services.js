@@ -7,6 +7,7 @@
 	this.timeSet = false;
 	this.hour = 0;
 	this.minute = 0;
+	this.roomID = -1;
  }
 angular.module('starter.services', [])
 //TO-DO Handle Rooms with no lights
