@@ -51,21 +51,21 @@ def getMood(moodID):
 # Populate all Rooms based on power
 @app.route("/api/getRooms/")
 def getAllRooms():
-	roomSet = []
-	lightSet = []
-	rooms = db.rooms.find()     
-	
-	powerOn = db.lights.find({"power": True})
-	for L in powerOn:
-		lightSet.append(L)
-	for R in rooms:
-		R['power'] = False
-		for L in lightSet:
-			if (R['id'] == L['roomID']):
-				R['power'] = True
-		R.pop("_id")
-		roomSet.append(R)
-	return jsonify(rooms=roomSet)
+    roomSet = []
+    lightSet = []
+    rooms = db.rooms.find()     
+
+    powerOn = db.lights.find({"power": True})
+    for L in powerOn:
+            lightSet.append(L)
+    for R in rooms:
+            R['power'] = False
+            for L in lightSet:
+                    if (R['id'] == L['roomID']):
+                            R['power'] = True
+            R.pop("_id")
+            roomSet.append(R)
+    return jsonify(rooms=roomSet)
 
 # Update ONE light's info
 @app.route("/api/saveLight/", methods = ['POST'])
@@ -75,7 +75,7 @@ def postLight():
     changes = calcChanges(L,oldL)
     print changes
     db.lights.update({'id': L['id']}, L, True)
-    #serverToArduino.sendRoomInfo([{"light":L,"changes":changes}],arduino[L['roomID']])
+    serverToArduino.sendRoomInfo([{"light":L,"changes":changes}],arduino[L['roomID']])
     return jsonify(status='202 Accepted')
 
 # Update ONE mood's info
@@ -88,26 +88,29 @@ def postMood():
 	
 @app.route("/api/activateMood/<roomID>/<moodID>", methods = ['POST'])
 def activateMood(roomID,moodID):
-	lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
-	mood = db.moods.find_one({'id':int(moodID)})['lights']
-	rooms = [[],[]]
-	for l in range(0,lights.count()):
-		moodLight = mood[l % len(mood)]
-		moodLight['power'] = True
-		moodLight['brightness'] = int(moodLight['brightness'])
-		temp = lights[l]
-		changes = calcChanges(moodLight,temp)
-		print changes
-		for change in changes:
-			temp[change] = moodLight[change]
-		db.lights.update({'id':temp['id']},temp,True)
-		#serverToArduino.sendRoomInfo(temp,changes,arduino)
-	return jsonify(status='202 Accepted')
+    lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
+    mood = db.moods.find_one({'id':int(moodID)})['lights']
+    rooms = [[],[]]
+    for l in range(0,lights.count()):
+        moodLight = mood[l % len(mood)]
+        moodLight['power'] = True
+        moodLight['brightness'] = int(moodLight['brightness'])
+        temp = lights[l]
+        changes = calcChanges(moodLight,temp)
+        print changes
+        for change in changes:
+                temp[change] = moodLight[change]
+        db.lights.update({'id':temp['id']},temp,True)
+        rooms[temp['roomID']].append({"light":temp,"changes":changes})
+    print rooms
+    for id in range(0, len(rooms)):
+        serverToArduino.sendRoomInfo(rooms[id], arduino[id])
+    return jsonify(status='202 Accepted')
 
 @app.route("/api/removeMood/<moodID>", methods = ['POST'])
 def deleteMood(moodID):
-	db.moods.remove({'id':int(moodID)})
-	return jsonify(status='202 Accepted')
+    db.moods.remove({'id':int(moodID)})
+    return jsonify(status='202 Accepted')
 
 # Update ONE room's power
 @app.route("/api/rooms/switchPower/<roomID>", methods = ['POST'])
@@ -115,35 +118,34 @@ def postPower(roomID):
     P = request.get_json().get('power')
     lightsInRoom = db.lights.find({"roomID": int(roomID)})
     rooms = [[],[]]
-	
+        
     for L in lightsInRoom:
         L['power'] = P
         db.lights.update({'id': L['id']}, L, True)
-	    #rooms[L['roomID']].append({"light":L,"changes":['power']})
-	#for id in rooms:
-#print id
-		#serverToArduino.sendRoomInfo(rooms[id],arduino[id])
+        rooms[L['roomID']].append({"light":L,"changes":['power']})
+    for id in range(0,len(rooms)):
+        serverToArduino.sendRoomInfo(rooms[id],arduino[id])
     return jsonify(status='202 Accepted')
 
 	
 def calcChanges(old,new):
-	changes = ['color','brightness','power']
-	for change in ['color','brightness','power']:
-		if old[change] == new[change]:
-			changes.remove(change)
-	return changes
+    changes = ['color','brightness','power']
+    for change in ['color','brightness','power']:
+            if old[change] == new[change]:
+                    changes.remove(change)
+    return changes
 	
 def initLights():
-	lights = db.lights.find()
-	rooms = [[],[]]
-	for L in lights:
-		rooms[L['roomID']].append({"light":L,"changes":['color','brightness','power']})
-	#for room in rooms:
-		#serverToArduino.sendRoomInfo(rooms)
-		#serverToArduino.sendLightInfo(L,['color','brightness','power'],arduino)
+    lights = db.lights.find()
+    rooms = [[],[]]
+    for L in lights:
+        rooms[L['roomID']].append({"light":L,"changes":['color','brightness','power']})
+    for id in range(0,len(rooms)):
+        serverToArduino.sendRoomInfo(rooms[id], arduino[id])
 
 def checkTime():
     now = datetime.datetime.now()
+    print now
     moods = db.moods.find({"time.timeSet": True})
     for m in moods:
         hr = int(m['time']['hour'])
@@ -151,9 +153,9 @@ def checkTime():
         if hr == now.hour and mint == now.minute:
             roomID = m['time']['roomID']
             moodID = m['id']
-            lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
-            mood = db.moods.find_one({'id':int(moodID)})['lights']
             rooms = [[],[]]
+            mood = db.moods.find_one({'id':int(moodID)})['lights']
+            lights = db.lights.find() if int(roomID) == -1 else db.lights.find({'roomID':int(roomID)})
             for l in range(0,lights.count()):
                 moodLight = mood[l % len(mood)]
                 moodLight['power'] = True
@@ -162,9 +164,12 @@ def checkTime():
                 changes = calcChanges(moodLight,temp)
                 print changes
                 for change in changes:
-                    temp[change] = moodLight[change]
+                        temp[change] = moodLight[change]
                 db.lights.update({'id':temp['id']},temp,True)
-                #serverToArduino.sendRoomInfo(temp,changes,arduino)
+                rooms[temp['roomID']].append({"light":temp,"changes":changes})
+            print rooms
+            for id in range(0, len(rooms)):
+                serverToArduino.sendRoomInfo(rooms[id], arduino[id])
     threading.Timer(5.0, checkTime).start()
 
 
@@ -172,8 +177,8 @@ if __name__ == "__main__":
     print("*  server start...........")
     print("*  client loaded..........")
     port = int(os.environ.get("PORT", 5000))
+    arduino = serverToArduino.arduinoInit()
     initLights()
-    #arduino = serverToArduino.arduinoInit()
     #app.run()
     checkTime()
     app.run(host='0.0.0.0', port=port)
