@@ -61,8 +61,8 @@ def sendLightInfo(light,changes,arduino):
 
 def arduinoInit():
         # Open connection to the serial port connected to the Arduino
-        arduino = serial.Serial('COM7', 9600)
-        arduino1 = serial.Serial('COM9',9600)
+        arduino = serial.Serial('COM5', 9600)
+        arduino1 = serial.Serial('COM6',9600)
         # Give time for the Arduino to reset
         time.sleep(2)
         return [arduino, arduino1]

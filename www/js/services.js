@@ -38,6 +38,9 @@ angular.module('starter.services', [])
 			return $http.get('api/getAllLights/'+roomID);
 		},
 		setRoomPower: function(roomID,roomPower) {
+			var time = new Date();
+			console.log("ASDASD");
+			console.log(time.getSeconds(),time.getMilliseconds());
 			$http.post("/api/rooms/switchPower/"+roomID, {power:roomPower});
 		}
 	}

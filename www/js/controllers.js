@@ -96,6 +96,7 @@ angular.module('starter.controllers', [])
   
   $scope.toggleRoom = function(index,roomID) {
 	Rooms.setRoomPower(roomID,$scope.rooms[index].power);
+	$scope.time = new Date();
   }
   
   $scope.getRoomPower = Rooms.getRoomPower;
