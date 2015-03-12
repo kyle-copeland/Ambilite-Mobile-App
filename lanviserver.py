@@ -82,7 +82,6 @@ def postLight():
 @app.route("/api/saveMood/", methods = ['POST'])
 def postMood():
     M = request.get_json().get('mood')
-    print M
     db.moods.update({'id': M['id']}, M, True)
     return jsonify(status='202 Accepted')
 	

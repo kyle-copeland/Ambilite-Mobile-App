@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('MoodsCtrl', function($scope, $state,$ionicHistory, Moods) {
+.controller('MoodsCtrl', function($scope, $state,$ionicHistory,$ionicPopup, Moods) {
 	Moods.all().then(function (moods) {
 		$scope.moods = moods;
 	});
@@ -11,6 +11,17 @@ angular.module('starter.controllers', [])
 		{
 			$scope.moods.splice(index,1);
 			Moods.remove(mood);
+		}
+		else
+		{
+			
+			var alertPopup = $ionicPopup.alert({
+			 title: 'Permission Denied',
+			 template: 'Cannot delete special preset. Shame on you!'
+		   });
+		   alertPopup.then(function(res) {
+				 $state.go('tab.moods');
+		   });
 		}
 	}
 })
@@ -30,7 +41,7 @@ angular.module('starter.controllers', [])
 	});
 	
 })
-.controller('MoodsAddCtrl', function($scope,$state,$stateParams,Moods,Rooms) {
+.controller('MoodsAddCtrl', function($scope,$state,$stateParams,$ionicPopup,Moods,Rooms) {
 	$scope.title = $stateParams.moodID === "" ? "Add Mood" : "Edit Mood";
 
 	if($stateParams.moodID === '')
@@ -51,21 +62,47 @@ angular.module('starter.controllers', [])
 	$scope.saveMood = function() {
 		Moods.setName(document.getElementById("mood-name").value,$scope.mood.id);
 		Moods.save();
+		 // An alert dialog
+		if($scope.title == "Edit Mood")
+		{
+		   var alertPopup = $ionicPopup.alert({
+			 title: 'Mood Saved',
+			 template: 'Save Successful'
+		   });
+		   alertPopup.then(function(res) {
+			$state.go('tab.moods-edit')
+		   });
+		}
 	}
 	$scope.showTimeForm = false;
 	$scope.date = new Date();
 })
-.controller('MoodsAddEffectsCtrl', function($scope,$stateParams,Moods,Lights,ClassPicker) {
+.controller('MoodsAddEffectsCtrl', function($scope,$stateParams,$state,$ionicPopup,Moods,Lights,ClassPicker) {
 	$scope.moodID = $stateParams.moodID;
 	Moods.get($stateParams.moodID).then (function (mood) {
 		$scope.mood = mood;
-		$scope.lights = $scope.mood.lights;
-	
-		
+		$scope.lights = $scope.mood.lights;		
 	});
 	
 	$scope.saveMood = function() {
 		Moods.save();
+		var alertPopup = $ionicPopup.alert({
+		 title: 'Mood Saved',
+		 template: 'Save Successful'
+	   });
+	   alertPopup.then(function(res) {
+		if($scope.moodID != "")
+		 $state.go('tab.moods-edit');
+		 else
+		 {
+			Moods.reset();
+			$state.transitionTo('tab.moods', $stateParams, {
+				reload: true,
+				inherit: false,
+				notify: true
+			});
+		}
+	   });
 	}
 	$scope.removeLightEffect = function(index) {
 		$scope.lights.splice(index,1);
