@@ -5,7 +5,8 @@ import serverToArduino
 import datetime
 import threading
 from pymongo import MongoClient
-client = MongoClient('mongodb://copelandky:1llkillyou@ds045511.mongolab.com:45511/ambilite')
+#client = MongoClient('mongodb://copelandky:1llkillyou@ds045511.mongolab.com:45511/ambilite')
+client = MongoClient()
 db = client.ambilite
 
 app = Flask(__name__, static_folder='www')

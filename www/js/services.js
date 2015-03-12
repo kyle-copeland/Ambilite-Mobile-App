@@ -110,6 +110,7 @@ angular.module('starter.services', [])
 		currMood.name = name;
 	},
 	save: function() {
+		console.log("Save",currMood)
 		$http.post("/api/saveMood/", {mood:currMood});
 		var exists = false;
 		for(var i =0; i < moods.length; i++)
